@@ -69,17 +69,15 @@ function convertTexToSvg(tex, options) {
     @param {Block} blk
     @return {Promise<Block>}
 */
-function processBlock(blk) {
-    var book = this;
-    var tex = blk.body;
-    var isInline = !(tex[0] == "\n");
+function processBlock(book, blk, isInline) {
+    var tex = blk.body.replace(/\\([^a-zA-Z0-9])/g, "$1").replace("&gt;", ">").replace("&lt;", "<");
 
     // For website return as script
     var config = book.config.get('pluginsConfig.mathjax', {});
 
     if ((book.output.name == "website" || book.output.name == "json")
         && !config.forceSVG) {
-        return '<script type="math/tex; '+(isInline? "": "mode=display")+'">'+blk.body+'</script>';
+        return '<script type="math/tex; '+(isInline? "": "mode=display")+'">'+tex+'</script>';
     }
 
     // Check if not already cached
@@ -138,7 +136,19 @@ module.exports = {
                 start: "$$",
                 end: "$$"
             },
-            process: processBlock
+            process: function(blk) {
+                return processBlock(this, blk, false);
+            }
+        },
+        inline_math: {
+            shortcuts: {
+                parsers: ["markdown", "asciidoc"],
+                start: "$",
+                end: "$"
+            },
+            process: function(blk) {
+                return processBlock(this, blk, true);
+            }
         }
     }
 };
