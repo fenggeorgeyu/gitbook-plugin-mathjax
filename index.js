@@ -70,7 +70,7 @@ function convertTexToSvg(tex, options) {
     @return {Promise<Block>}
 */
 function processBlock(book, blk, isInline) {
-    var tex = blk.body.replace(/\\([^a-zA-Z0-9])/g, "$1").replace("&gt;", ">").replace("&lt;", "<");
+    var tex = blk.body.replace(/\\([^a-zA-Z0-9 \\])/g, "$1").replace("&gt;", ">").replace("&lt;", "<");
 
     // For website return as script
     var config = book.config.get('pluginsConfig.mathjax', {});
