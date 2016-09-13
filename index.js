@@ -150,5 +150,14 @@ module.exports = {
                 return processBlock(this, blk, true);
             }
         }
+    },
+    hooks: {
+        "page:before": function(page) {
+          page.content = page.content
+              .replace(/\${1}([^\$]*)\\{([^\$]*)\$/g, '$$$1\\lbrace $2$$')
+              .replace(/\${1}([^\$]*)\\}([^\$]*)\$/g, '$$$1\\rbrace $2$$')
+              .replace(/\\\\/g, '\\\\\\\\');
+          return page;
+        }
     }
 };
