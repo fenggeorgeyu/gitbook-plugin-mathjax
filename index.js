@@ -153,10 +153,21 @@ module.exports = {
     },
     hooks: {
         "page:before": function(page) {
-          page.content = page.content
-              .replace(/\${1}([^\$]*)\\{([^\$]*)\$/g, '$$$1\\lbrace $2$$')
-              .replace(/\${1}([^\$]*)\\}([^\$]*)\$/g, '$$$1\\rbrace $2$$')
-              .replace(/\\\\/g, '\\\\\\\\');
+          var preprocess_latex = function(str) {
+            return str
+              .replace(/\${1,2}([^\$]*)\\{([^\$]*)\${1,2}/g, '$$$1\\lbrace $2$$')
+              .replace(/\${1,2}([^\$]*)\\}([^\$]*)\${1,2}/g, '$$$1\\rbrace $2$$')
+              .replace(/[^\$]{1}\${1}([^\$]*)\\\\([^\$]*)\${1}[^\$]{1}/g, '$$$1\\\\\\\\ $2$$');
+          };
+
+          var preprocess_latex_n = function(str, n) {
+            for(i = 0; i < n; i++) {
+              str = preprocess_latex(str);
+            }
+            return str;
+          };
+          page.content = preprocess_latex_n(page.content, 10);
+
           return page;
         }
     }
