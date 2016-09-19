@@ -70,7 +70,7 @@ function convertTexToSvg(tex, options) {
     @return {Promise<Block>}
 */
 function processBlock(book, blk, isInline) {
-    var tex = blk.body.replace(/\\([^a-zA-Z0-9 \\%])/g, "$1").replace(/&gt;/g, ">").replace(/&lt;/g, "<");
+    var tex = blk.body.replace(/\\([^a-zA-Z0-9 \\%])/g, "$1").replace(/&gt;/g, ">").replace(/&lt;/g, "<").replace(/\\{4}/g, '\\\\');
 
     // For website return as script
     var config = book.config.get('pluginsConfig.mathjax', {});
@@ -157,7 +157,7 @@ module.exports = {
             return str
               .replace(/\${1,2}([^\$]*)\\{([^\$]*)\${1,2}/g, '$$$1\\lbrace $2$$')
               .replace(/\${1,2}([^\$]*)\\}([^\$]*)\${1,2}/g, '$$$1\\rbrace $2$$')
-              .replace(/([^\$]{1})\${1}([^\$]*)\\{2}([^\$]*)\${1}([^\$]{1})/g, '$1$$$2\\\\\\\\ $3$$$4');
+              .replace(/([^\$]{1})\${1}([^\$]*)([^\\]{1})\\{2}([^\\]{1})([^\$]*)\${1}([^\$]{1})/g, '$1$$$2$3\\\\\\\\ $4$5$$$6');
           };
 
           var preprocess_latex_n = function(str, n) {
