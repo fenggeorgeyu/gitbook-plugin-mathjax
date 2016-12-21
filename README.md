@@ -10,7 +10,7 @@ Add it to your `book.json` configuration:
 
 ```
 {
-    "plugins": ["mathjax@git+https://github.com/qinix/gitbook-plugin-mathjax"]
+    "plugins": ["mathjax@git+https://github.com/fenggeorgeyu/gitbook-plugin-mathjax"]
 }
 ```
 
